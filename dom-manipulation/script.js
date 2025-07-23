@@ -162,3 +162,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("newQuote").addEventListener("click", filterQuotes);
 });
+// Mock server data (replace this with actual fetch if needed)
+const mockServerData = [
+  { text: "Don't watch the clock; do what it does. Keep going.", category: "Motivation" },
+  { text: "Programs must be written for people to read.", category: "Programming" }
+];
+
+// Compare local and server quotes by checking text uniqueness
+function syncWithServer() {
+  // Simulate fetch
+  const serverQuotes = mockServerData;
+
+  let conflicts = [];
+  let updates = 0;
+
+  serverQuotes.forEach(serverQuote => {
+    const exists = quotes.some(localQuote =>
+      localQuote.text === serverQuote.text && localQuote.category === serverQuote.category
+    );
+
+    if (!exists) {
+      quotes.push(serverQuote);
+      updates++;
+    } else {
+      // Optional: handle edits if same text, different category
+      const local = quotes.find(q => q.text === serverQuote.text);
+      if (local.category !== serverQuote.category) {
+        conflicts.push({ local, server: serverQuote });
+        // Simple conflict resolution: prefer server
+        local.category = serverQuote.category;
+      }
+    }
+  });
+
+  saveQuotes();
+  populateCategories();
+  filterQuotes();
+  notifySync(updates, conflicts.length);
+}
+
+// Notify user after sync
+function notifySync(updates, conflicts) {
+  const syncNotice = document.getElementById("syncNotice");
+
+  if (updates === 0 && conflicts === 0) {
+    syncNotice.textContent = "No new updates from server.";
+  } else {
+    syncNotice.textContent = `${updates} new quote(s) added, ${conflicts} conflict(s) resolved (server version used).`;
+  }
+
+  setTimeout(() => {
+    syncNotice.textContent = "";
+  }, 5000);
+}
