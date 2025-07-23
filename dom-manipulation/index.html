@@ -9,6 +9,12 @@
   <h1>Dynamic Quote Generator</h1>
   <div id="quoteDisplay"></div>
   <button id="newQuote">Show New Quote</button>
+    <!-- File import -->
+  <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+  
+  <!-- Export button -->
+  <button onclick="exportToJsonFile()">Export Quotes to JSON</button>
+
 
   <!-- Don't include the form manually -->
   <script src="script.js"></script>

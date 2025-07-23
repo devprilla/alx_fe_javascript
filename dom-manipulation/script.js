@@ -1,11 +1,27 @@
-// Initial quote array
-let quotes = [
-  { text: "The only way to do great work is to love what you do.", category: "Inspiration" },
-  { text: "Talk is cheap. Show me the code.", category: "Programming" },
-  { text: "Success usually comes to those who are too busy to be looking for it.", category: "Motivation" }
-];
+let quotes = [];
 
-// Function to show a random quote
+// Load quotes from local storage
+function loadQuotes() {
+  const storedQuotes = localStorage.getItem("quotes");
+  if (storedQuotes) {
+    quotes = JSON.parse(storedQuotes);
+  } else {
+    // Default quotes if nothing in storage
+    quotes = [
+      { text: "The only way to do great work is to love what you do.", category: "Inspiration" },
+      { text: "Talk is cheap. Show me the code.", category: "Programming" },
+      { text: "Success usually comes to those who are too busy to be looking for it.", category: "Motivation" }
+    ];
+    saveQuotes();
+  }
+}
+
+// Save quotes to local storage
+function saveQuotes() {
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+}
+
+// Show random quote and save it to session storage
 function showRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];
@@ -15,9 +31,12 @@ function showRandomQuote() {
     <p><strong>Category:</strong> ${quote.category}</p>
     <p>"${quote.text}"</p>
   `;
+
+  // Save last viewed quote to sessionStorage
+  sessionStorage.setItem("lastViewedQuote", JSON.stringify(quote));
 }
 
-// Function to add a new quote
+// Add new quote
 function addQuote() {
   const textInput = document.getElementById("newQuoteText");
   const categoryInput = document.getElementById("newQuoteCategory");
@@ -28,18 +47,19 @@ function addQuote() {
   if (text && category) {
     const newQuote = { text, category };
     quotes.push(newQuote);
+    saveQuotes();
 
     textInput.value = "";
     categoryInput.value = "";
 
-    showRandomQuote(); // Update DOM
+    showRandomQuote();
     alert("New quote added!");
   } else {
     alert("Please enter both a quote and a category.");
   }
 }
 
-// ✅ Required: createAddQuoteForm function
+// Build form dynamically
 function createAddQuoteForm() {
   const formContainer = document.createElement("div");
 
@@ -62,9 +82,44 @@ function createAddQuoteForm() {
   document.body.appendChild(formContainer);
 }
 
-// Wait for DOM to load
+// ✅ Import JSON file
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
+  fileReader.onload = function (event) {
+    try {
+      const importedQuotes = JSON.parse(event.target.result);
+      if (Array.isArray(importedQuotes)) {
+        quotes.push(...importedQuotes);
+        saveQuotes();
+        alert("Quotes imported successfully!");
+        showRandomQuote(); // Show a new quote from combined list
+      } else {
+        alert("Invalid JSON format.");
+      }
+    } catch (e) {
+      alert("Error reading JSON file.");
+    }
+  };
+  fileReader.readAsText(event.target.files[0]);
+}
+
+// ✅ Export to JSON file
+function exportToJsonFile() {
+  const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = "quotes.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+// Initialize on page load
 document.addEventListener("DOMContentLoaded", function () {
+  loadQuotes();
   document.getElementById("newQuote").addEventListener("click", showRandomQuote);
-  createAddQuoteForm(); // Call the required function
-  showRandomQuote(); // Show a quote on load
+  createAddQuoteForm();
+  showRandomQuote();
 });
