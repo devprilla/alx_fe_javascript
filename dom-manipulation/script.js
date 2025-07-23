@@ -1,11 +1,11 @@
-// Array of quotes
+// Initial quote array
 let quotes = [
   { text: "The only way to do great work is to love what you do.", category: "Inspiration" },
   { text: "Talk is cheap. Show me the code.", category: "Programming" },
   { text: "Success usually comes to those who are too busy to be looking for it.", category: "Motivation" }
 ];
 
-// Function to display a random quote
+// Function to show a random quote
 function showRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];
@@ -32,14 +32,39 @@ function addQuote() {
     textInput.value = "";
     categoryInput.value = "";
 
+    showRandomQuote(); // Update DOM
     alert("New quote added!");
   } else {
     alert("Please enter both a quote and a category.");
   }
 }
 
-// Event listener for the "Show New Quote" button
-document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+// ✅ Required: createAddQuoteForm function
+function createAddQuoteForm() {
+  const formContainer = document.createElement("div");
 
-// Optionally show a random quote on load
-showRandomQuote();
+  const textInput = document.createElement("input");
+  textInput.id = "newQuoteText";
+  textInput.placeholder = "Enter a new quote";
+
+  const categoryInput = document.createElement("input");
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.placeholder = "Enter quote category";
+
+  const addButton = document.createElement("button");
+  addButton.textContent = "Add Quote";
+  addButton.addEventListener("click", addQuote);
+
+  formContainer.appendChild(textInput);
+  formContainer.appendChild(categoryInput);
+  formContainer.appendChild(addButton);
+
+  document.body.appendChild(formContainer);
+}
+
+// Wait for DOM to load
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+  createAddQuoteForm(); // Call the required function
+  showRandomQuote(); // Show a quote on load
+});
