@@ -4,44 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dynamic Quote Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #syncNotice {
+      background: #dff0d8;
+      color: #3c763d;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    #quoteDisplay {
+      margin: 20px 0;
+      font-size: 1.2em;
+    }
+    button {
+      margin: 5px 0;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div id="syncNotice" style="color: green; font-weight: bold;"></div>
-<button onclick="syncWithServer()">Sync with Server</button>
+
+  <div id="syncNotice"></div>
+
+  <button onclick="syncWithServer()">Sync with Server</button>
 
   <h1>Dynamic Quote Generator</h1>
+
   <select id="categoryFilter" onchange="filterQuotes()">
-  <option value="all">All Categories</option>
-</select>
+    <option value="all">All Categories</option>
+  </select>
 
   <div id="quoteDisplay"></div>
   <button id="newQuote">Show New Quote</button>
-    <!-- File import -->
+
   <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
-  
-  <!-- Export button -->
   <button onclick="exportToJsonFile()">Export Quotes to JSON</button>
 
-
-  <!-- Don't include the form manually -->
   <script src="script.js"></script>
-  <!-- Category Filter -->
-<select id="categoryFilter" onchange="filterQuotes()">
-  <option value="all">All Categories</option>
-</select>
-
-<!-- Display Area -->
-<div id="quoteDisplay"></div>
-<button id="newQuote">Show New Quote</button>
-
-<!-- Notifications -->
-<div id="syncNotice" style="font-weight: bold; color: green;"></div>
-
-<!-- Import & Export -->
-<input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
-<button onclick="exportToJsonFile()">Export Quotes to JSON</button>
-<!-- Required Notification Element -->
-<div id="syncNotice" style="background: #dff0d8; color: #3c763d; padding: 8px; margin: 10px 0;"></div>
-
 </body>
 </html>
